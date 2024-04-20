@@ -1,0 +1,41 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Sid": "AllowSSLRequestsOnly",
+          "Action": "s3:*",
+          "Effect": "Deny",
+          "Resource": [
+              "arn:aws:s3:::${env}-${pj}-artifact-bucket",
+              "arn:aws:s3:::${env}-${pj}-artifact-bucket/*"
+          ],
+          "Condition": {
+              "Bool": {
+                  "aws:SecureTransport": "false"
+              }
+          },
+          "Principal": "*"
+        }, 
+        {
+            "Sid": "CrossAccountS3GetPutPolicy",
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::${account_dev}:role/${env_dev}-${pj}-codecommit-role"
+            },
+            "Action": [
+              "s3:Get*",
+              "s3:Put*"
+            ],
+            "Resource": "arn:aws:s3:::${env}-${pj}-artifact-bucket/*"
+          },
+          {
+            "Sid": "CrossAccountS3ListPolicy",
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::${account_dev}:role/${env_dev}-${pj}-codecommit-role"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::${env}-${pj}-artifact-bucket"
+        }
+    ]
+}

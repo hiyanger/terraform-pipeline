@@ -1,0 +1,38 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "UploadArtifactPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::${env_prd}-${pj}-artifact-bucket/*"
+        },
+        {
+            "Sid": "KMSAccessPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "kms:DescribeKey",
+                "kms:GenerateDataKey*",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:Decrypt"
+            ],
+            "Resource": "arn:aws:kms:ap-northeast-1:${account_prd}:key/${prd_tfpipeline_kmsid}"
+        },
+        {
+            "Sid": "CodeCommitAccessPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "codecommit:GetBranch",
+                "codecommit:GetCommit",
+                "codecommit:UploadArchive",
+                "codecommit:GetUploadArchiveStatus",
+                "codecommit:CancelUploadArchive"
+            ],
+            "Resource": "arn:aws:codecommit:ap-northeast-1:${account_id}:${env}-${pj}-repository"
+        }
+    ]
+}

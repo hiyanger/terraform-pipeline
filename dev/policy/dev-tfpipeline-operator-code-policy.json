@@ -1,0 +1,115 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "codecommit:ListRepositories"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "codecommit:GetRepository",
+                "codecommit:ListBranches",
+                "codecommit:GetBranch",
+                "codecommit:GetObjectIdentifier",
+                "codecommit:GetTree",
+                "codecommit:GetReferences",
+                "codecommit:GetCommit",
+                "codecommit:CreateBranch",
+                "codecommit:GitPull",
+                "codecommit:GitPush",
+                "codecommit:DeleteBranch",
+                "codecommit:GetMergeOptions",
+                "codecommit:GetCommitsFromMergeBase",
+                "codecommit:GetDifferences",
+                "codecommit:GetCommentsForComparedCommit",
+                "codecommit:GetBlob",
+                "codecommit:ListPullRequests",
+                "codecommit:CreatePullRequest",
+                "codecommit:GetPullRequest",
+                "codecommit:BatchGetPullRequests",
+                "codecommit:EvaluatePullRequestApprovalRules",
+                "codecommit:GetCommentsForPullRequest",
+                "codecommit:GetCommitHistory"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:codecommit:ap-northeast-1:${account_id}:${env}-${pj}-repository"
+        },
+        {
+            "Action": [
+                "codecommit:GitPush",
+                "codecommit:DeleteBranch"
+            ],
+            "Condition": {
+                "StringEqualsIfExists": {
+                    "codecommit:References": [
+                        "refs/heads/develop",
+                        "refs/heads/main"
+                    ]
+                },
+                "Null": {
+                    "codecommit:References": "false"
+                }
+            },
+            "Effect": "Deny",
+            "Resource": "arn:aws:codecommit:ap-northeast-1:${account_id}:${env}-${pj}-repository"
+        },
+        {
+            "Action": [
+                "codecommit:MergeBranchesByFastForward",
+                "codecommit:MergeBranchesBySquash",
+                "codecommit:MergeBranchesByThreeWay",
+                "codecommit:MergePullRequestByFastForward",
+                "codecommit:MergePullRequestBySquash",
+                "codecommit:MergePullRequestByThreeWay"
+            ],
+            "Condition": {
+                "StringEqualsIfExists": {
+                    "codecommit:References": "refs/heads/develop"
+                }
+            },
+            "Effect": "Allow",
+            "Resource": "arn:aws:codecommit:ap-northeast-1:${account_id}:${env}-${pj}-repository"
+        },
+        {
+            "Action": "codepipeline:ListPipelines",
+            "Effect": "Allow",
+            "Resource": "arn:aws:codepipeline:ap-northeast-1:${account_id}:*"
+        },
+        {
+            "Action": [
+                "codepipeline:ListPipelineExecutions",
+                "codepipeline:ListActionExecutions",
+                "codepipeline:GetPipeline",
+                "codepipeline:GetPipelineState",
+                "codepipeline:GetPipelineExecution",
+                "codepipeline:StartPipelineExecution"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:codepipeline:ap-northeast-1:${account_id}:${env}-${pj}-codepipeline"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "codepipeline:PutApprovalResult",
+            "Resource": "arn:aws:codepipeline:ap-northeast-1:${account_id}:${env}-${pj}-codepipeline/Approval/apply-approval"
+        },
+        {
+            "Action": "codebuild:BatchGetBuilds",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:codebuild:ap-northeast-1:${account_id}:project/${env}-${pj}-codebuild-plan",
+                "arn:aws:codebuild:ap-northeast-1:${account_id}:project/${env}-${pj}-codebuild-apply"
+            ]
+        },
+        {
+            "Action": "logs:Get*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:logs:ap-northeast-1:${account_id}:log-group:/aws/codebuild/${env}-${pj}-codebuild-plan:*",
+                "arn:aws:logs:ap-northeast-1:${account_id}:log-group:/aws/codebuild/${env}-${pj}-codebuild-apply:*"
+            ]
+        }
+    ]
+}

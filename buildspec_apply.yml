@@ -1,0 +1,7 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - cd $dir
+      - terraform apply -input=false -auto-approve -no-color

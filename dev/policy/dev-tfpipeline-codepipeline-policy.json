@@ -1,0 +1,40 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CodeCommit",
+            "Effect": "Allow",
+            "Action": [
+                "codecommit:GetBranch",
+                "codecommit:GetCommit",
+                "codecommit:UploadArchive",
+                "codecommit:GetUploadArchiveStatus",
+                "codecommit:CancelUploadArchive"
+            ],
+            "Resource": "arn:aws:codecommit:ap-northeast-1:${account_id}:${env}-${pj}-repository"
+        },
+        {
+            "Sid": "S3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketVersioning"
+            ],
+            "Resource": "arn:aws:s3:::${env}-${pj}-artifact-bucket*"
+        },
+        {
+            "Sid": "CodeBuild",
+            "Effect": "Allow",
+            "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild"
+            ],
+            "Resource": [
+                "arn:aws:codebuild:ap-northeast-1:${account_id}:project/${env}-${pj}-codebuild-plan",
+                "arn:aws:codebuild:ap-northeast-1:${account_id}:project/${env}-${pj}-codebuild-apply"
+            ]
+        }
+    ]
+}

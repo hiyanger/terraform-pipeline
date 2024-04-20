@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - cd $dir
+      - terraform init -input=false -no-color
+      - terraform plan -input=false -no-color
+
+artifacts:
+    files:
+        - '**/*'
